@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>Chat</title>
+
+	<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css" />
+	<link rel="stylesheet" href="/lib/chat.css" />
+	<link rel="stylesheet" href="/lib/balloon.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+	<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+	<div id="chat-container">
+		<div class="card" id="chat">
+			<div class="card-header">
+				CHAT ROBOT
+				<span class="online" id="online_count">Ninguém está online</span>
+			</div>
+			<div class="card-content p-2" id="messages-container">
+				<ul id="messages">
+					
+				</ul>
+			</div>
+			<div class="card-footer">
+				<form id="form" action="">
+					<input id="input" autocomplete="off" data-role="input" data-clear-button="false" />
+					<button class="button success">Enviar</button>
+				</form>
+			</div>
+		</div>
+
+		<div class="card" id="contacts-container">
+			<div class="card-header">
+				Contatos
+			</div>
+			<div class="card-content">
+				<ul id="contacts">
+					
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="card" id="identification">
+		<div class="card-header">
+			Identifique-se
+		</div>
+		<div class="card-content p-4">
+			<form id="form-identification" action="">
+				<input id="name" autocomplete="off" data-role="input" data-clear-button="false" />
+				
+				<button class="button success">Ok</button>
+			</form>
+		</div>
+	</div>
+
+	<script>
+		var form = document.getElementById('form');
+		var formIdentfication = document.getElementById('form-identification');
+		var input = document.getElementById('input');
+		var count = document.getElementById('online_count');
+		var messagesContainer = document.getElementById('messages-container');
+
+		let identified = false
+
+		const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g
+		
+		formIdentfication.addEventListener('submit', function(e) {
+			e.preventDefault();
+
+			handleStart();
+		});
+
+		function handleStart() {
+			identified = true
+
+			var name = document.getElementById('name');
+			
+			if(!name.value) {
+				return
+			}
+
+			var socket = io();
+
+			socket.emit('user identification', {
+				name: name.value
+			});
+			
+			form.addEventListener('submit', function(e) {
+				e.preventDefault();
+
+				if (input.value) {
+					socket.emit('chat message', input.value);
+					input.value = '';
+				}
+			});
+
+			socket.on('chat message', function(msg) {
+				var item = document.createElement('li');
+				const isURL = urlRegex.test(msg.msg)
+				item.innerHTML = `<b>${msg.name}</b>: ${isURL ? `<a href="${msg.msg}" target="_blank">${msg.msg}</a>` : msg.msg}`;
+
+				if(name.value === msg.name) {
+					item.classList.add('me', 'animate__animated', 'animate__fadeIn')
+				} else {
+					item.classList.add('them', 'animate__animated', 'animate__fadeIn')
+				}
+
+				messages.appendChild(item);
+				messagesContainer.scrollTo(0, messagesContainer.scrollHeight);
+			});
+
+			socket.on('online', function(sessions) {
+				count.innerHTML = `<b>●</b> ${sessions.length} pessoas online`;
+
+				const contacts = document.querySelector('#contacts')
+				contacts.innerHTML = ''
+
+				for(const session of sessions) {
+					var item = document.createElement('li');
+					item.innerHTML = `<div data-role="panel">${session.user.name}</div>`;
+					contacts.appendChild(item)
+				}
+			});
+
+			document.querySelector('#identification').style.display = 'none'
+			document.querySelector('#chat-container').style.display = 'grid'
+		}
+	</script>
+
+	<script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
+</body>
+</html>

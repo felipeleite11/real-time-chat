@@ -1,0 +1,41 @@
+.me, 
+.them {
+	width: 100%;
+	margin: 14px auto;
+	padding: 14px;
+	position: relative;
+}
+
+.me {
+	background-color: #fff59d;
+}
+
+.them {
+	background-color: #c8e6c9;
+}
+  
+.me:before {
+	content: "";
+	width: 0px;
+	height: 0px;
+	position: absolute;
+	border-left: 10px solid #fff59d;
+	border-right: 10px solid transparent;
+	border-top: 10px solid #fff59d;
+	border-bottom: 10px solid transparent;
+	right: -19px;
+	top: 6px;
+}
+  
+.them:before {
+	content: "";
+	width: 0px;
+	height: 0px;
+	position: absolute;
+	border-left: 10px solid transparent;
+	border-right: 10px solid #c8e6c9;
+	border-top: 10px solid #c8e6c9;
+	border-bottom: 10px solid transparent;
+	left: -19px;
+	top: 6px;
+}

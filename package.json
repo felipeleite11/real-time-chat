@@ -1,0 +1,16 @@
+{
+  "name": "chat",
+  "version": "1.0.0",
+  "description": "Sistema de chat em grupo.",
+  "main": "index.js",
+  "author": "Felipe Leite",
+  "license": "MIT",
+  "dependencies": {
+    "express": "4",
+    "nodemon": "^2.0.12",
+    "socket.io": "^4.2.0"
+  },
+  "scripts": {
+    "start": "nodemon index.js"
+  }
+}

@@ -1,0 +1,71 @@
+body {
+	display: flex;
+	flex-direction: column;
+}
+
+.card {
+	margin: 8px auto;
+}
+
+#identification {
+	margin: auto;
+}
+
+#identification .card-content form {
+	display: flex;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+#chat-container {
+	display: none;
+	grid-template-columns: auto 200px;
+}
+
+#chat .card-header {
+	display: flex;
+	justify-content: space-between;
+}
+
+#chat .card-content {
+	height: calc(100vh - 68px - 56px - 20px);
+	overflow: hidden auto;
+}
+
+#chat #online_count {
+	font-size: 13px;
+}
+
+#chat #online_count b {
+	color: #4caf50;
+	font-size: 16px;
+}
+
+#chat .card-footer form {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+#contacts {
+	margin: 0;
+}
+
+.card-header .online {
+	font-size: 10px;
+}
+
+ul {
+	list-style: none;
+}
+
+@media(max-width: 650px) {
+	#chat-container {
+		grid-template-columns: 1fr;
+	}
+
+	#contacts {
+		display: none;
+	}
+}
